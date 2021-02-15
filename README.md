@@ -1,37 +1,37 @@
-# Step by step tutorial 
+# Step by step tutorial
 
 Welcome to the TRiP tool tutorial !  
-    
+
 >TRiP is designed to perform all classical steps of **ribosome profiling** (RiboSeq) data >analysis from the FastQ files to the differential expression analysis.
-    
-    
+
+
 ## 1) Install Docker  
 First of all, Docker must be present in version 19 or higher.  
 If you don’t already have it, now is the time to fix it !  
 Docker Engine is available on different OS like macOS and Windows 10 through Docker Desktop and as a static binary installation for a variety of Linux platforms. All are available here : https://docs.docker.com/engine/install/   
-    
+
 >Tips:  
 >&emsp;&emsp;&emsp;For Windows, WSL2 and Ubuntu from Microsoft store applications are needed too.  
-  
+
 ## 2) Directory preparation  
 TRiP does not need installation (yipee) but a precise folder architecture is required (boo).  
 The first step is the project folder creation. It is named as your project and will be the volume linked to Docker.  
 Then, two sub-folders and a file have to be created and completed respectively.   
-    
+
 > **Caution, those steps are majors for the good course of the analysis**  
 > **Subfolders don’t have uppercase**    
-  
+
 Folder architecture at this step:  
 Project_name  
-  
+
 ### a) *fastq* subfolder  
 This subfolder, as its name suggests, should contain your FastQs. These must be compressed in .gz.  
 **Format of file name must be as following:**  
 &emsp;&emsp;&emsp;biological_condition_name.replicat.fastq.gz     
 For example, for the first replicat of the wild-type condition, sample will be named *WT.1.fastq.gz*   
-     
+
 >Caution, for **Windows**, extensions can be hidden.    
-   
+
 Folder architecture at this step:  
 Project_name  
 └── fastq   
@@ -39,22 +39,22 @@ Project_name
 &emsp;&emsp;&emsp;├── condA.2.fastq.gz   
 &emsp;&emsp;&emsp;├── condB.1.fastq.gz   
 &emsp;&emsp;&emsp;└── condB.2.fastq.gz   
-  
-  
+
+
 ### b) *database* subfolder  
 In this subfolder, you must put at least the following three files:  
 - your genome fasta file: Whether it's the genome or the transcriptome, it must be your reference fasta file where reads will be aligned. It must, like the other files, be downloaded from the [Ensembl](https://www.ensembl.org/index.html) database.  
-    
+
 > Note:    
 >&emsp;&emsp;For complexe genomes, transcriptome is preferable (less complexity and better analysis).   
 >&emsp;&emsp;If the genome is used, the computer needs a larger RAM capacity than for transcriptome.    
-   
-   
+
+
 - GFF3 file corresponding to the reference genome dropped.  
 - out-RNA fasta: This fasta file must gather together RNA sequences you want to remove. As a rule, these are at least rRNA. You can also add mitochondrial RNA or any other RNA.  
-  
+
 If you have them, files containing each annotation length (see next paragraph) also be dropped into this folder.  
-  
+
 Folder architecture at this step:  
 Project_name  
 ├── fastq   
@@ -66,15 +66,15 @@ Project_name
 &emsp;&emsp;&emsp;├── reference_transcriptome.fa  
 &emsp;&emsp;&emsp;├── RNA_to_remove.fa  
 &emsp;&emsp;&emsp;└── annotation_length.txt (if possible)  
-  
+
 ### c) [config.yaml](link to configfile entre parenthèses) file  
 Config.yaml file is used to define parameters to tell TRiP how to process your data.  
 You must download it [here](lien final du config) and open it with a text editor.    
 It must be carefully completed and be present in the project directory everytime you want to run TRiP.  
-     
+
 >Caution  
 >&emsp;&emsp;&emsp;Spaces and quotation marks **must not be changed**! Your information must be entered in quotes     
-   
+
 #### Project name  
 First and easy step, the project name ! You could (and it is recommended) use the same that your folder.  
 *project_name*: principal directory name  
@@ -108,9 +108,9 @@ We have pre-define them:
 *logFC*: defined at 0 to keep all the genes.  
 #### Window for qualitative test  
 During the quality analysis, the periodicity is observed on bases around start and stop.     
-     
+
 >The periodicity must be calculated using a metagene profile. It provides the amount of footprints relative to all annotated start and stop codons in a selected window.   
-    
+
 The window selected by default is -50/+100 nts and -100/+50 nts around start and stop codons respectively.   
 *window_bf*: define your window before start and after stop  
 *window_af*: define your window after star and before stop  
@@ -118,14 +118,14 @@ The window selected by default is -50/+100 nts and -100/+50 nts around start and
 Thanks to the use of Snakemake, TRiP can analyse many samples at the same time. We define that ¼ of available CPUs are necessarily requisitioned for this multiple tasks in parallel.  
 As the majority of tools used in the analysis pipeline have a multithreaded option, you can choose the number of threads you allow additionally.  
 *threads*: number of threads you allowed.    
-    
+
 >Caution:  
 >&emsp;&emsp;&emsp;You could attribute maximum 4 threads.  
 >&emsp;&emsp;&emsp;Indeed:  
 >&emsp;&emsp;&emsp;Allow 1 thread = Remain on a ¼ of threads used  
 >&emsp;&emsp;&emsp;Allow 2 threads = Each sample will have 2 threads at its disposal. 2/4 of the threads will therefore be used.   
 >&emsp;&emsp;&emsp;Allow 3 threads = ¾ of CPUs are used. We advise not to go beyond so as not to saturate the computer and to be able to continue to use it.     
-     
+
 Folder architecture at this step:  
 Project_name  
 ├── fastq   
@@ -140,7 +140,7 @@ Project_name
 └── config.yaml  
 
 Don't forget to save file !        
-  
+
 ## 3) Pull TRiP  
 When the folder architecture is ready, it’s time to take a TRiP !  
 First, open a terminal.  
@@ -149,27 +149,27 @@ Copy and past the following command line:
 &emsp;&emsp;&emsp;`docker pull equipegst/trip`  
 If you have rights problem, copy and past this command:    
 &emsp;&emsp;&emsp;`sudo docker pull equipegst/trip`     
-  
+
 ## 4) Run TRiP  
 Then, or if you already have used TRiP, you can run it thanks to the following command:  
 &emsp;&emsp;&emsp;`docker run -v /path/to/working/directory/:/data/ equipegst/trip`  
 */path/to/working/directory/* corresponds to the project_name directory full path.   
 */data/* **must not be modified in any way**   
-    
+
 >Caution:   
 >&emsp;&emsp;&emsp;All paths must start and finish with a slash “/”   
-  
-   
+
+
 >For Windows users  
 >&emsp;&emsp;&emsp;Path has to start at the local disks C or D: *C:\your\path\*   
 >&emsp;&emsp;&emsp;Path has to be composed and finished with backslashes “\”   
 >&emsp;&emsp;&emsp;/data/ path do not change !   
-  
+
 ## 5) In case of error   
 Probleme docker   
 probleme de mémoire   
 Et si problème autre sur un job, voir la rule et aller dans le dossier logs     
-  
+
 ## 6) Understand results  
 Here the project_name folder architecture after TRiP run.  
 Initial folders and files are still present and highligth in bold in the tree architecture below.  
@@ -240,9 +240,8 @@ It contains also three files:
 &emsp;&emsp;i) *PROJECT_NAME.Analysis_report.html* gathers standard output of each analysis pipeline tool. It allows to know numbers of reads at each step a)raw reads b)reads after trimming and length selection c)after out RNA depletion d)after double alignment on the reference genome.  
 &emsp;&emsp;ii) *PROJECT_NAME.Final_report.txt* presents all figures and explanation link with the differential analysis.  
 &emsp;&emsp;iii) *config.yaml* to have a parameters backup.     
-  
+
 - *a dag file* which represents all the analysis pipeline steps with your samples.  
-     
+
 >Last big tip:  
-In case that a sample is too variable against other replicats or if new samples sequencing are added to your study, you can delete/add them in the *fastq* subfolder, delete the subfolder *RESULTS/DESeq2* and the two reports presents in *RESULTS*. Run again TRiP on the same *project_name* folder and it only (re)create missing files (complete analysis for added samples, new differential analysis with all samples available in *fastq* subfolder).  
-     
+In case that a sample is too variable against other replicats or if new samples sequencing are added to your study, you can delete/add them in the *fastq* subfolder, delete the subfolder *RESULTS/DESeq2*. Run again TRiP on the same *project_name* folder and it only (re)create missing files (complete analysis for added samples, new differential analysis with all samples available in *fastq* subfolder).  
