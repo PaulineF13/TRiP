@@ -67,9 +67,9 @@ Project_name
 &emsp;&emsp;&emsp;├── RNA_to_remove.fa  
 &emsp;&emsp;&emsp;└── annotation_length.txt (if possible)  
 
-### c) [config.yaml](link to configfile entre parenthèses) file  
+### c) [config.yaml](https://raw.githubusercontent.com/equipeGST/TRiP/main/config.yaml) file  
 Config.yaml file is used to define parameters to tell TRiP how to process your data.  
-You must download it [here](lien final du config) and open it with a text editor.    
+You must download it [here](https://raw.githubusercontent.com/equipeGST/TRiP/main/config.yaml) and open it with a text editor.    
 It must be carefully completed and be present in the project directory everytime you want to run TRiP.  
 
 >Caution  
@@ -231,7 +231,7 @@ Initial folders and files are still present and highligth in bold in the tree ar
 - *RESULTS* folder contains 7 subfolders:   
 &emsp;&emsp;i) *BAM*: it contains a BAM file for each sample (allows visualization on tools such as IGV).  
 &emsp;&emsp;ii) *DESeq2*: it contains the count matrix, differential analysis tables and images related to the DESeq2 analysis.   
-&emsp;&emsp;iii)*fastqc*: it contains raw data quality controls.   
+&emsp;&emsp;iii) *fastqc*: it contains raw data quality controls.   
 &emsp;&emsp;iv) *htseqcount_CDS*: it contains htseq output for CDS counts.    
 &emsp;&emsp;v) *htseqcount_fiveprime*: if the UTR covering option is on, this folder contains htseq output for five prime UTR counts.   
 &emsp;&emsp;vi) *htseqcount_threeprime*: if the UTR covering option is on, this folder contains htseq output for three prime UTR counts.    
